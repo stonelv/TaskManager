@@ -31,4 +31,6 @@ public class User
     public DateTime? UpdatedAt { get; set; }
 
     public virtual ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
+
+    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }
