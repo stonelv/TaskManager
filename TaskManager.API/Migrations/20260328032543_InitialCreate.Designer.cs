@@ -11,7 +11,7 @@ using TaskManager.API.Models;
 namespace TaskManager.API.Migrations
 {
     [DbContext(typeof(TaskManagerContext))]
-    [Migration("20260328025006_InitialCreate")]
+    [Migration("20260328032543_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

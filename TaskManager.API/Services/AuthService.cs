@@ -70,7 +70,13 @@ namespace TaskManager.API.Services
             
             var foundUser = user.FirstOrDefault();
 
-            if (foundUser == null || !VerifyPassword(loginDto.Password, foundUser.PasswordHash))
+            if (foundUser == null)
+            {
+                throw new UnauthorizedAccessException("用户名或密码错误");
+            }
+
+            // Verify password
+            if (!VerifyPassword(loginDto.Password, foundUser.PasswordHash))
             {
                 throw new UnauthorizedAccessException("用户名或密码错误");
             }
@@ -128,17 +134,25 @@ namespace TaskManager.API.Services
 
         public bool VerifyPassword(string password, string passwordHash)
         {
-            var hashBytes = Convert.FromBase64String(passwordHash);
-            var salt = new byte[32];
-            var hash = new byte[hashBytes.Length - 32];
-            
-            Buffer.BlockCopy(hashBytes, 0, salt, 0, 32);
-            Buffer.BlockCopy(hashBytes, 32, hash, 0, hash.Length);
-            
-            using var hmac = new HMACSHA256(salt);
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            
-            return computedHash.SequenceEqual(hash);
+            try
+            {
+                var hashBytes = Convert.FromBase64String(passwordHash);
+                var salt = new byte[32];
+                var hash = new byte[hashBytes.Length - 32];
+                
+                Buffer.BlockCopy(hashBytes, 0, salt, 0, 32);
+                Buffer.BlockCopy(hashBytes, 32, hash, 0, hash.Length);
+                
+                using var hmac = new HMACSHA256(salt);
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                
+                return computedHash.SequenceEqual(hash);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"VerifyPassword error: {ex.Message}");
+                return false;
+            }
         }
     }
 

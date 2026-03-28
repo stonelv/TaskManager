@@ -39,6 +39,7 @@ namespace TaskManager.API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             _logger.LogInformation("Login attempt for: {UsernameOrEmail}", loginDto.UsernameOrEmail);
+            _logger.LogInformation("Password length: {Length}", loginDto.Password?.Length ?? 0);
             
             var result = await _authService.LoginAsync(loginDto);
             
