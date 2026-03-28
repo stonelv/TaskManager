@@ -3,36 +3,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskManagerSystem.Models;
 
-public enum TaskStatus
-{
-    Pending = 0,
-    InProgress = 1,
-    Completed = 2
-}
-
-public class TaskItem
+public class Comment
 {
     [Key]
     [Column("id")]
     public long Id { get; set; }
 
     [Required]
-    [Column("title")]
-    [MaxLength(200)]
-    public string Title { get; set; } = string.Empty;
-
-    [Column("description")]
+    [Column("content")]
     [MaxLength(1000)]
-    public string? Description { get; set; }
+    public string Content { get; set; } = string.Empty;
 
-    [Column("status")]
-    public TaskStatus Status { get; set; } = TaskStatus.Pending;
+    [Column("task_id")]
+    public long TaskId { get; set; }
 
     [Column("user_id")]
     public long UserId { get; set; }
-
-    [Column("due_date")]
-    public DateTime? DueDate { get; set; }
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -40,8 +26,9 @@ public class TaskItem
     [Column("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 
+    [ForeignKey(nameof(TaskId))]
+    public virtual TaskItem Task { get; set; } = null!;
+
     [ForeignKey(nameof(UserId))]
     public virtual User User { get; set; } = null!;
-
-    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }
