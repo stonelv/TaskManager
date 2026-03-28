@@ -42,4 +42,6 @@ public class TaskItem
 
     [ForeignKey(nameof(UserId))]
     public virtual User User { get; set; } = null!;
+
+    public virtual ICollection<TaskComment> Comments { get; set; } = new List<TaskComment>();
 }
