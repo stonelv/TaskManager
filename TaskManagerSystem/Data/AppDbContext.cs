@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<TaskItem> Tasks { get; set; } = null!;
+    public DbSet<TaskComment> TaskComments { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,6 +24,18 @@ public class AppDbContext : DbContext
             .HasOne(t => t.User)
             .WithMany(u => u.Tasks)
             .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<TaskComment>()
+            .HasOne(c => c.Task)
+            .WithMany()
+            .HasForeignKey(c => c.TaskId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<TaskComment>()
+            .HasOne(c => c.User)
+            .WithMany()
+            .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
